@@ -29,13 +29,13 @@ class Client(object):
             return requests.get(url, params=params).json()
         except NameError:
             if params is not None:
-                url = '{}?{}'.format(url, urllib.urlencode(params))
+                url = '{0}?{1}'.format(url, urllib.urlencode(params))
             return json.load(urllib2.urlopen(url))
 
     def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
         if name not in self._apis:
-            raise ValueError('API name must be one of {}, not {!r}.'.format(
+            raise ValueError('API name must be one of {0}, not {1!r}.'.format(
                 tuple(self._apis), name))
         params = {'url': url, 'token': self._token}
         if timeout is not None:
@@ -44,7 +44,7 @@ class Client(object):
             if not isinstance(fields, str):
                 fields = ','.join(sorted(fields))
             params['fields'] = fields
-        url = '{}/v{}/{}'.format(API_ROOT, self._version, name)
+        url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
         return self._get(url, params=params)
 
     def article(self, url, fields=None, timeout=None):
