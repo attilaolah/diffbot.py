@@ -8,5 +8,5 @@ python:
   - "pypy"
 
 install:
-  - "pip install nose mock ."
+  - "pip install requests nose mock ."
 script: nosetests
