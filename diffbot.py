@@ -16,7 +16,7 @@ def _urlencode(params):
     """Wrapper around `urllib.urlencode` and `urllib.parse.urlencode`."""
     try:
         return urllib.urlencode(params)
-    except AttributeError:
+    except (NameError, AttributeError):
         return urllib.parse.urlencode(params)
 
 
@@ -24,7 +24,7 @@ def _urlopen(params):
     """Wrapper around `urllib2.urlopen` and `urllib.request.urlopen`."""
     try:
         return urllib2.urlopen(params)
-    except AttributeError:
+    except (NameError, AttributeError):
         return urllib.request.urlopen(params)
 
 
