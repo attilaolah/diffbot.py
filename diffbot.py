@@ -4,12 +4,28 @@ import json
 try:
     import requests
 except ImportError:
+    import urllib
     try:
-        from urllib import urlencode
-        from urllib2 import urlopen
+        import urllib2
     except ImportError:  # pragma: no cover
-        from urllib.parse import urlencode
-        from urllib.request import urlopen
+        import urllib.parse
+        import urllib.request
+
+
+def _urlencode(params):
+    """Wrapper around `urllib.urlencode` and `urllib.parse.urlencode`."""
+    try:
+        return urllib.urlencode(params)
+    except AttributeError:
+        return urllib.parse.urlencode(params)
+
+
+def _urlopen(params):
+    """Wrapper around `urllib2.urlopen` and `urllib.request.urlopen`."""
+    try:
+        return urllib2.urlopen(params)
+    except AttributeError:
+        return urllib.request.urlopen(params)
 
 
 API_ROOT = 'http://api.diffbot.com/'
@@ -33,8 +49,8 @@ class Client(object):
             return requests.get(url, params=params).json()
         except NameError:
             if params is not None:
-                url = '{0}?{1}'.format(url, urlencode(params))
-            return json.loads(urlopen(url).read().decode('utf-8'))
+                url = '{0}?{1}'.format(url, _urlencode(params))
+            return json.loads(_urlopen(url).read().decode('utf-8'))
 
     def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
