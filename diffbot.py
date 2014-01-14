@@ -1,8 +1,6 @@
 """Diffbot API Wrapper."""
 import json
 
-urlencode = urlopen = None
-
 try:
     import requests
 except ImportError:
