@@ -1,6 +1,7 @@
 # Python [Diffbot][1] API
 
 [![Build Status](https://travis-ci.org/attilaolah/diffbot.py.png?branch=master)](https://travis-ci.org/attilaolah/diffbot.py)
+[![Coverage Status](https://coveralls.io/repos/attilaolah/diffbot.py/badge.png)](https://coveralls.io/r/attilaolah/diffbot.py)
 
 Simple usage:
 
