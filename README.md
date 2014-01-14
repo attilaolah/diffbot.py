@@ -1,5 +1,7 @@
 # Python [Diffbot][1] API
 
+[![Build Status](https://travis-ci.org/attilaolah/diffbot.py.png?branch=master)](https://travis-ci.org/attilaolah/diffbot.py)
+
 Simple usage:
 
 ```python
