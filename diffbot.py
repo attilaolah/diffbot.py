@@ -68,22 +68,22 @@ def api(name, url, token, fields=None, timeout=None):
     return Client(token).api(name, url, fields, timeout)
 
 
-def article(url, token=None, fields=None, timeout=None):
+def article(url, token, fields=None, timeout=None):
     """Shortcut for `Client(token, version).article(url)`."""
     return api('article', url, token, fields, timeout)
 
 
-def frontpage(url, token=None, timeout=None):
+def frontpage(url, token, timeout=None):
     """Shortcut for `Client(token, version).frontpage(url)`."""
     return api('frontpage', url, token, timeout)
 
 
-def product(url, token=None, fields=None, timeout=None):
+def product(url, token, fields=None, timeout=None):
     """Shortcut for `Client(token, version).product(url)`."""
     return api('product', url, token, fields, timeout)
 
 
-def image(url, token=None, fields=None, timeout=None):
+def image(url, token, fields=None, timeout=None):
     """Shortcut for `Client(token, version).image(url)`."""
     return api('image', url, token, fields, timeout)
 
@@ -110,8 +110,7 @@ def _main():
     fields = None
     if _args.all:
         fields = '*'
-    print(json.dumps((api(_args.api, _args.url,
-                          token=_args.token,
+    print(json.dumps((api(_args.api, _args.url, _args.token,
                           fields=fields)),
                      sort_keys=True,
                      indent=2))

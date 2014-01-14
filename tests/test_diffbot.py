@@ -16,8 +16,6 @@ GITHUB_COM = 'https://github.com'
 
 def fake_requests_get(url, params=None):
     """A stub requests.get() implementation."""
-    if params['token'] != TOKEN:
-        raise ValueError(u'Invalid token: {}'.format(params['token']))
     api = urlparse.urlparse(url)
     url = urlparse.urlparse(params['url'])
     resource = os.path.join('tests', 'resources', url.netloc,
@@ -38,8 +36,8 @@ class FakeResponse(object):
         return self._json
 
 
-class ClientTestCase(unittest.TestCase):
-    """Test case for the client methods."""
+class ArticleTest(unittest.TestCase):
+    """Article API tests."""
 
     def setUp(self):
         """Set up a mock patcher."""
@@ -55,17 +53,23 @@ class ClientTestCase(unittest.TestCase):
 
     def test_article(self):
         """Test the Article API."""
+        result = diffbot.article(GITHUB_COM, token=TOKEN)
+        self.assertEqual(result['url'], GITHUB_COM)
+        self.assertEqual(result['title'], 'Build software better, together.')
+
+    def test_client_article(self):
+        """Test the Article API."""
         result = self.client.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['title'], 'Build software better, together.')
 
-    def test_article_v1(self):
+    def test_client_article_v1(self):
         """Test the Article API."""
         result = self.client_v1.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['title'], 'Build software better, together.')
 
-    def test_article_v2(self):
+    def test_client_article_v2(self):
         """Test the Article API."""
         result = self.client_v2.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
