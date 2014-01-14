@@ -7,9 +7,7 @@ python:
   - "pypy"
 
 install:
-  - pip install .
-before_script:
-  - pip install requests nose mock coveralls
+  - pip install requests argparse nose mock coverage coveralls .
 script: nosetests
 after_success:
   - coveralls
