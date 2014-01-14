@@ -180,7 +180,8 @@ class ClientTestUrllib(unittest.TestCase):
         This will make the `requests` library unavailable in `diffbot`.
         """
         self.patcher = mock.patch('urllib2.urlopen', fake_urllib2_urlopen)
-        sys.meta_path.append(ImportHook('requests'))
+        self.import_hook = ImportHook('requests')
+        sys.meta_path.append(self.import_hook)
         self.patcher.start()
         import diffbot
         diffbot = reload(diffbot)
@@ -191,9 +192,34 @@ class ClientTestUrllib(unittest.TestCase):
     def tearDown(self):
         """Stop the patcher."""
         self.patcher.stop()
+        sys.meta_path.remove(self.import_hook)
 
     def test_article_client(self):
         """Test the Article API."""
         result = self.module.Client(TOKEN).article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['title'], 'Build software better, together.')
+
+
+class CmdLineTest(unittest.TestCase):
+    """Test the command line interface."""
+
+    def setUp(self):
+        """Set up a mock patcher."""
+        import sys
+        self.patcher = mock.patch('requests.get', fake_requests_get)
+        self.patcher.start()
+        import diffbot
+        self.module = reload(diffbot)
+        self._sys_argv = sys.argv[:]
+        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '--all']
+
+    def tearDown(self):
+        """Stop the patcher."""
+        import sys
+        self.patcher.stop()
+        sys.argv[:] = self._sys_argv[:]
+
+    def test_article(self):
+        """Test the Article API."""
+        self.module._main()
