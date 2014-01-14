@@ -24,7 +24,7 @@ def fake_requests_get(url, params=None):
     resource = os.path.join('tests', 'resources', url.netloc,
                             api.path.strip('/') + '.json')
     with open(resource, 'rb') as src:
-        return FakeResponse(json.load(src))
+        return FakeResponse(json.loads(src.read().decode('utf-8')))
 
 
 def fake_urllib2_urlopen(url):
