@@ -61,6 +61,7 @@ $ python diffbot.py article https://github.com TOKEN
 * [Requests][2] support (but no dependency)
 * Simple & small (<100 LOC)
 * 100% test coverage
+* Passes `pyflakes`, `pep8`, `flake8`, `pylint` score 10/10
 * CI-tested
 
 

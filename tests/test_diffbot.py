@@ -195,21 +195,25 @@ class ClientTest(unittest.TestCase):
         self.assertRaises(ValueError, raises)
 
 
-
 class ClientTestUrllib(unittest.TestCase):
-    """API method tests using urllib2 and urllib.
+    """API method tests using `urllib2` and `urllib`.
 
-    This tests the scenario when the requests library is not installed."""
+    This tests the scenario when the `requests` library is not installed."""
 
     def setUp(self):
         """Set up a mock patcher.
 
         This will make the `requests` library unavailable in `diffbot`.
         """
-        self.patcher = mock.patch('urllib2.urlopen', fake_urllib2_urlopen)
         self.import_hook = ImportHook('requests')
         sys.meta_path.append(self.import_hook)
-        self.patcher.start()
+        try:
+            self.patcher = mock.patch('urllib2.urlopen', fake_urllib2_urlopen)
+            self.patcher.start()
+        except ImportError:
+            self.patcher = mock.patch('urllib.request.urlopen',
+                                      fake_urllib2_urlopen)
+            self.patcher.start()
         import diffbot
         try:
             from imp import reload

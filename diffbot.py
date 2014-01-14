@@ -4,8 +4,12 @@ import json
 try:
     import requests
 except ImportError:
-    import urllib
-    import urllib2
+    try:
+        from urllib import urlencode
+        from urllib2 import urlopen
+    except ImportError:  # pragma: no cover
+        from urllib.parse import urlencode
+        from urllib.request import urlopen
 
 
 API_ROOT = 'http://api.diffbot.com/'
@@ -29,8 +33,8 @@ class Client(object):
             return requests.get(url, params=params).json()
         except NameError:
             if params is not None:
-                url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            return json.load(urllib2.urlopen(url))
+                url = '{0}?{1}'.format(url, urlencode(params))
+            return json.load(urlopen(url))
 
     def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
