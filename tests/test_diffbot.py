@@ -211,6 +211,10 @@ class ClientTestUrllib(unittest.TestCase):
         sys.meta_path.append(self.import_hook)
         self.patcher.start()
         import diffbot
+        try:
+            from imp import reload
+        except ImportError:
+            pass
         diffbot = reload(diffbot)
         del diffbot.requests
         self.module = diffbot
@@ -237,6 +241,10 @@ class CmdLineTest(unittest.TestCase):
         self.patcher = mock.patch('requests.get', fake_requests_get)
         self.patcher.start()
         import diffbot
+        try:
+            from imp import reload
+        except ImportError:
+            pass
         self.module = reload(diffbot)
         self._sys_argv = sys.argv[:]
         sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '--all']
