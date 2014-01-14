@@ -9,7 +9,5 @@ python:
   - "jython"
 
 install:
-  - pip install requests argparse nose mock coverage coveralls .
+  - pip install requests nose mock coverage .
 script: nosetests
-#after_success:
-#  - coveralls
