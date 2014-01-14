@@ -34,7 +34,7 @@ class Client(object):
         except NameError:
             if params is not None:
                 url = '{0}?{1}'.format(url, urlencode(params))
-            return json.load(urlopen(url))
+            return json.loads(urlopen(url).read().decode('utf-8'))
 
     def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
