@@ -1,8 +1,5 @@
 # Python [Diffbot][1] API
 
-[1]: https://www.diffbot.com
-
-
 Simple usage:
 
 ```python
@@ -57,7 +54,15 @@ $ python diffbot.py article https://github.com TOKEN
 }
 ```
 
-Features:
+## Features:
 
 * Python 3 support
 * Google App Engine support
+* [Requests][2] support (but no dependency)
+* Simple & small (<100 LOC)
+* 100% test coverage
+* CI-tested
+
+
+[1]: https://www.diffbot.com
+[2]: http://docs.python-requests.org
