@@ -55,7 +55,7 @@ class ImportHook(object):
         """Block specific modules."""
         self._blocked_modules = blocked_modules
         for module in blocked_modules:
-            for item in sys.modules.keys():
+            for item in sys.modules.keys()[:]:
                 if item.split('.')[0] == module:
                     del sys.modules[item]
 
