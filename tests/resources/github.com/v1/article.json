@@ -1,0 +1,43 @@
+{
+  "categories": {
+    "business_finance": 0.13095238095238093, 
+    "disaster_accident": 0.03857142857142856, 
+    "education": 0.02080512927909072, 
+    "entertainment_culture": 0.07490476190476186, 
+    "environment": 0.05875780239094121, 
+    "health_medical_pharma": 0.021428571428571425, 
+    "hospitality_recreation": 0.08676190476190475, 
+    "humaninterest": 0.08933333333333332, 
+    "labor": 0.029914935287899926, 
+    "law_crime": 0.030952380952380943, 
+    "other": 0.0, 
+    "politics": 0.03285714285714285, 
+    "religion_belief": 0.039999999999999994, 
+    "socialissues": 0.054007299813783875, 
+    "sports": 0.028844424566312452, 
+    "technology_internet": 0.2294489795918367, 
+    "war_conflict": 0.005714285714285713, 
+    "weather": 0.02674523859394456
+  }, 
+  "cid": -1, 
+  "date_created": "Mon, 13 Jan 2014 20:45:00 PST", 
+  "html": "<div><div class=\"image_frame\"><img alt=\"\" src=\"https://github.com/images/modules/home/gh-mac-app.png\"></img></div><div class=\"image_frame\"><img alt=\"\" src=\"https://github.com/images/modules/home/gh-windows-app.png\"></img></div><div class=\"image_frame\"><img alt=\"GitHub Enterprise\" src=\"https://github.com/images/modules/home/gh-enterprise-code.png\"></img><div class=\"caption\">GitHub Enterprise</div></div></div>", 
+  "icon": "https://github.com/apple-touch-icon-144.png", 
+  "images": [
+    {
+      "primary": "true", 
+      "url": "https://github.com/images/modules/home/gh-mac-app.png"
+    }, 
+    {
+      "url": "https://github.com/images/modules/home/gh-windows-app.png"
+    }, 
+    {
+      "caption": "GitHub Enterprise", 
+      "url": "https://github.com/images/modules/home/gh-enterprise-code.png"
+    }
+  ], 
+  "text": "", 
+  "title": "Build software better, together.", 
+  "type": "article", 
+  "url": "https://github.com"
+}
