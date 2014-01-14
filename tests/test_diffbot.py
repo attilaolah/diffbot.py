@@ -96,19 +96,19 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(result['type'], 'article')
 
     def test_client_article_v1(self):
-        """Test the Article API."""
+        """Test the Article API version 1."""
         result = self.client_v1.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['type'], 'article')
 
     def test_client_article_v2(self):
-        """Test the Article API."""
+        """Test the Article API version 2."""
         result = self.client_v2.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['type'], 'article')
 
     def test_article_fields(self):
-        """Test the Article API."""
+        """Test the Article API with strings provided as a list."""
         result = self.module.article(GITHUB_COM, token=TOKEN, fields=[
             'url', 'type', 'title'])
         self.assertEqual(result['url'], GITHUB_COM)
@@ -116,8 +116,15 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(result['title'], 'Build software better, together.')
 
     def test_article_fields_str(self):
-        """Test the Article API."""
+        """Test the Article API with fields provided as a string."""
         result = self.module.article(GITHUB_COM, token=TOKEN, fields='*')
+        self.assertEqual(result['url'], GITHUB_COM)
+        self.assertEqual(result['type'], 'article')
+        self.assertEqual(result['title'], 'Build software better, together.')
+
+    def test_article_timeout(self):
+        """Test the Article API with a timeout."""
+        result = self.module.article(GITHUB_COM, token=TOKEN, timeout=10)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['type'], 'article')
         self.assertEqual(result['title'], 'Build software better, together.')
@@ -171,6 +178,22 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['type'], 'article')
         self.assertEqual(result['title'], 'Build software better, together.')
+
+    def test_invalid_api(self):
+        """Test calling an invalid API.
+
+        This should not make a request to the Diffbot API endpoint.
+        """
+        def raises():
+            self.module.api('foo', GITHUB_COM, token=TOKEN)
+        self.assertRaises(ValueError, raises)
+
+    def test_invalid_api_client(self):
+        """Test calling an invalid API using the Client object."""
+        def raises():
+            self.client.api('foo', GITHUB_COM)
+        self.assertRaises(ValueError, raises)
+
 
 
 class ClientTestUrllib(unittest.TestCase):
