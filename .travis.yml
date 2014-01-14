@@ -7,5 +7,9 @@ python:
   - "pypy"
 
 install:
-  - "pip install requests nose mock ."
+  - pip install .
+before_script:
+  - pip install requests nose mock coveralls
 script: nosetests
+after_success:
+  - coveralls
