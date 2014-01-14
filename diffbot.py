@@ -36,6 +36,8 @@ class Client(object):
         if timeout is not None:
             params['timeout'] = timeout
         if fields is not None:
+            if not isinstance(fields, str):
+                fields = ','.join(sorted(fields))
             params['fields'] = fields
         url = '{}/v{}/{}'.format(API_ROOT, self._version, name)
         return self._get(url, params=params)
@@ -101,8 +103,16 @@ def _main():
         API key (token).
         Get one at https://www.diffbot.com/.
     """)
+    parser.add_argument('-a', '--all', help="""
+        Request all fields.
+    """, action='store_true')
     _args = parser.parse_args()
-    print(json.dumps((api(_args.api, _args.url, token=_args.token)),
+    fields = None
+    if _args.all:
+        fields = '*'
+    print(json.dumps((api(_args.api, _args.url,
+                          token=_args.token,
+                          fields=fields)),
                      sort_keys=True,
                      indent=2))
 
