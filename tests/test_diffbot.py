@@ -247,7 +247,7 @@ class CmdLineTest(unittest.TestCase):
             pass
         self.module = reload(diffbot)
         self._sys_argv = sys.argv[:]
-        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '--all']
+        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
 
     def tearDown(self):
         """Stop the patcher."""
