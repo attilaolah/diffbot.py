@@ -2,10 +2,14 @@
 import json
 import os.path
 import unittest
-import urlparse
 import sys
 
 import mock
+
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 
 
 TOKEN = 'test'
