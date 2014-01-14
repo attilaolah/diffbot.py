@@ -70,3 +70,7 @@ $ python diffbot.py article https://github.com TOKEN
 
 [1]: https://www.diffbot.com
 [2]: http://docs.python-requests.org
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
