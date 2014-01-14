@@ -1,0 +1,16 @@
+{
+  "html": "<div><div class=\"image_frame\"><img alt=\"\" src=\"https://github.com/images/modules/home/gh-windows-app.png\"></img></div></div>", 
+  "human_language": "en", 
+  "icon": "https://github.com/apple-touch-icon-144.png", 
+  "images": [
+    {
+      "primary": "true", 
+      "url": "https://github.com/images/modules/home/gh-windows-app.png"
+    }
+  ], 
+  "resolved_url": "https://github.com/", 
+  "text": "", 
+  "title": "Build software better, together.", 
+  "type": "article", 
+  "url": "https://github.com"
+}

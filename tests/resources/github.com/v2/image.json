@@ -1,0 +1,15 @@
+{
+  "images": [
+    {
+      "pixelHeight": 456, 
+      "pixelWidth": 984, 
+      "size": 47698, 
+      "url": "https://github.com/images/modules/home/gh-windows-app.png", 
+      "xpath": "/HTML/BODY/DIV[@class='wrapper']/DIV[@class='site clearfix']/DIV[@id='site-container']/DIV[@class='marketing-section marketing-desktop']/DIV[@class='container']/IMG[@class='marketing-section-img hide-mac']"
+    }
+  ], 
+  "resolved_url": "https://github.com/", 
+  "title": "GitHub \u00b7 Build software better, together.", 
+  "type": "image", 
+  "url": "https://github.com"
+}

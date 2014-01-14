@@ -8,12 +8,14 @@ except ImportError:
     import urllib2
 
 
-API_ROOT = 'http://api.diffbot.com'
+API_ROOT = 'http://api.diffbot.com/'
 API_VERSION = 2
 
 
 class Client(object):
     """Diffbot client."""
+
+    _apis = frozenset(('article', 'frontpage', 'product', 'image', 'analyze'))
 
     def __init__(self, token, version=API_VERSION):
         """Initialise the client."""
@@ -32,6 +34,9 @@ class Client(object):
 
     def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
+        if name not in self._apis:
+            raise ValueError('API name must be one of {}, not {!r}.'.format(
+                tuple(self._apis), name))
         params = {'url': url, 'token': self._token}
         if timeout is not None:
             params['timeout'] = timeout
@@ -58,8 +63,8 @@ class Client(object):
         """Image API."""
         return self.api('image', url, fields=fields, timeout=timeout)
 
-    def classifier(self, url, fields=None, timeout=None):
-        """Classifier API."""
+    def analyze(self, url, fields=None, timeout=None):
+        """Classifier (analyze) API."""
         return self.api('analyze', url, fields=fields, timeout=timeout)
 
 
@@ -88,13 +93,18 @@ def image(url, token, fields=None, timeout=None):
     return api('image', url, token, fields, timeout)
 
 
+def analyze(url, token, fields=None, timeout=None):
+    """Shortcut for `Client(token, version).analyze(url)`."""
+    return api('analyze', url, token, fields, timeout)
+
+
 def _main():
     """Command line tool."""
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("api", help="""
         API to call.
-        One one of 'article', 'frontpage', 'product', 'image' or 'classifier'.
+        One one of 'article', 'frontpage', 'product', 'image' or 'analyze'.
     """)
     parser.add_argument("url", help="""
         URL to pass as the 'url' parameter.

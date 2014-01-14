@@ -1,0 +1,173 @@
+{
+  "icon": "https://github.com:443/apple-touch-icon-144.png", 
+  "sections": [
+    {
+      "items": [
+        {
+          "url": "http://developer.github.com"
+        }, 
+        {
+          "url": "http://training.github.com"
+        }, 
+        {
+          "url": "https://github.com/blog"
+        }, 
+        {
+          "title": "\u00a9 2014", 
+          "url": "https://github.com/contact"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Bring GitHub to work.", 
+          "url": "https://enterprise.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Why you\u2019ll love GitHub.", 
+          "url": "http://github.com/explore"
+        }
+      ], 
+      "primary": true
+    }, 
+    {
+      "items": [
+        {
+          "url": "http://eclipse.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "https://github.com/explore"
+        }, 
+        {
+          "url": "https://github.com/features"
+        }, 
+        {
+          "url": "https://github.com/blog"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "http://mac.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "http://windows.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Sign in", 
+          "url": "https://github.com/login"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Upgraded plans start at $7/mo.", 
+          "url": "https://github.com/plans"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "The power of GitHub on your desktop."
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "https://github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Use at least one lowercase letter, one numeral, and seven characters."
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Sign up for GitHub"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "terms of service", 
+          "url": "https://help.github.com/terms"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "privacy policy", 
+          "url": "https://help.github.com/privacy"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Learn more", 
+          "url": "http://windows.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Sign up", 
+          "url": "https://github.com/join"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "title": "Learn more", 
+          "url": "http://mac.github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "https://github.com"
+        }
+      ]
+    }, 
+    {
+      "items": [
+        {
+          "url": "https://github.com"
+        }
+      ]
+    }
+  ], 
+  "title": "Build software better, together.", 
+  "url": "https://github.com"
+}

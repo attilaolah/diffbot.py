@@ -1,0 +1,13 @@
+{
+  "leafPage": true, 
+  "products": [
+    {
+      "availability": true, 
+      "description": "Use at least one lowercase letter, one numeral, and seven characters.\nBy clicking \"Sign up for GitHub\", you agree to our terms of service and privacy policy .\nBuild software better, together.\nPowerful collaboration, code review, and code management for open source and private projects. Need private repositories? Upgraded plans start at $7/mo.", 
+      "title": "Build software better, together."
+    }
+  ], 
+  "resolved_url": "https://github.com/", 
+  "type": "product", 
+  "url": "https://github.com"
+}
