@@ -1,9 +1,11 @@
 """Diffbot API Wrapper."""
 import json
-import urllib
-import urllib2
 
-import requests
+try:
+    import requests
+except ImportError:
+    import urllib
+    import urllib2
 
 
 API_ROOT = 'http://api.diffbot.com'
@@ -28,35 +30,40 @@ class Client(object):
                 url = '{}?{}'.format(url, urllib.urlencode(params))
             return json.load(urllib2.urlopen(url))
 
-    def api(self, name, params=None):
+    def api(self, name, url, fields=None, timeout=None):
         """Generic API method."""
-        params = params or {}
-        params.setdefault('token', self._token)
+        params = {'url': url, 'token': self._token}
+        if timeout is not None:
+            params['timeout'] = timeout
+        if fields is not None:
+            params['fields'] = fields
         url = '{}/v{}/{}'.format(API_ROOT, self._version, name)
         return self._get(url, params=params)
 
-    def __fields_api(name, supports_fields=True):
-        """Generate an API that supports the 'fields' parameter."""
-        def _api_method(self, url, fields=None, timeout=None):
-            """Auto-generated API method."""
-            params = {'url': url}
-            if timeout is not None:
-                params['timeout'] = timeout
-            if supports_fields and fields is not None:
-                params['fields'] = fields
-            return self.api(name, params=params)
-        return _api_method
+    def article(self, url, fields=None, timeout=None):
+        """Article API."""
+        return self.api('article', url, fields=fields, timeout=timeout)
 
-    article = __fields_api('article')
-    frontpage = __fields_api('frontpage', False)
-    product = __fields_api('product')
-    image = __fields_api('image')
-    classifier = __fields_api('analyze')
+    def frontpage(self, url, timeout=None):
+        """Frontpage API."""
+        return self.api('frontpage', url, timeout=timeout)
+
+    def product(self, url, fields=None, timeout=None):
+        """Product API."""
+        return self.api('product', url, fields=fields, timeout=timeout)
+
+    def image(self, url, fields=None, timeout=None):
+        """Image API."""
+        return self.api('image', url, fields=fields, timeout=timeout)
+
+    def classifier(self, url, fields=None, timeout=None):
+        """Classifier API."""
+        return self.api('analyze', url, fields=fields, timeout=timeout)
 
 
 def api(name, url, token, fields=None, timeout=None):
-    """Shortcut for caling methods on Client(token, version)."""
-    return getattr(Client(token), name)(url, fields, timeout)
+    """Shortcut for caling methods on `Client(token, version)`."""
+    return Client(token).api(name, url, fields, timeout)
 
 
 def article(url, token=None, fields=None, timeout=None):
@@ -82,13 +89,22 @@ def image(url, token=None, fields=None, timeout=None):
 def _main():
     """Command line tool."""
     import argparse
-    import pprint
     parser = argparse.ArgumentParser()
-    parser.add_argument("api", help="API to call")
-    parser.add_argument("url", help="URL to pass as the 'url' parameter")
-    parser.add_argument('token', help='API key (token)')
+    parser.add_argument("api", help="""
+        API to call.
+        One one of 'article', 'frontpage', 'product', 'image' or 'classifier'.
+    """)
+    parser.add_argument("url", help="""
+        URL to pass as the 'url' parameter.
+    """)
+    parser.add_argument('token', help="""
+        API key (token).
+        Get one at https://www.diffbot.com/.
+    """)
     _args = parser.parse_args()
-    pprint.pprint(api(_args.api, _args.url, token=_args.token))
+    print(json.dumps((api(_args.api, _args.url, token=_args.token)),
+                     sort_keys=True,
+                     indent=2))
 
 
 if __name__ == '__main__':
