@@ -34,7 +34,7 @@ class Client(object):
             return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
 
     @staticmethod
-    def _post(url, data, content_type='text/plain', params=None):
+    def _post(url, data, content_type, params=None):
         """HTTP POST request."""
         try:
             return requests.post(url, params=params, data=data, headers={
@@ -42,13 +42,6 @@ class Client(object):
             }).json()
         except NameError:
             raise NotImplementedError
-        except ValueError:
-            # XXX DEBUG!
-            resp =  requests.post(url, params=params, data=data, headers={
-                'Content-Type': content_type,
-            })
-            import ipdb; ipdb.set_trace()
-
             #if params is not None:
             #    url = '{0}?{1}'.format(url, urllib.urlencode(params))
             #return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
@@ -148,7 +141,7 @@ def _main():
         File to read data from.
         Use '-' to read from STDIN.
     """)
-    fields = text = content_type = None
+    fields = text = None
     _args = parser.parse_args()
     if _args.all:
         fields = '*'
@@ -157,12 +150,8 @@ def _main():
     elif _args.file:
         with open(_args.file, 'rb') as src:
             text = src.read().decode('utf-8')
-    if text:
-        content_type = (text.lstrip() or ' ')[0] == '<' \
-            and 'text/html' or 'text/plain'
     print(json.dumps((api(_args.api, _args.url, _args.token,
                           text=text or None,
-                          content_type=content_type,
                           fields=fields)),
                      sort_keys=True,
                      indent=2))
