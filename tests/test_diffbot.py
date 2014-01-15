@@ -207,7 +207,7 @@ class ClientTestUrllib(unittest.TestCase):
         This will make the `requests` library unavailable in `diffbot`.
         """
         self.import_hook = ImportHook('requests')
-        sys.meta_path.append(self.import_hook)
+        sys.meta_path.insert(0, self.import_hook)
         try:
             self.patcher = mock.patch('urllib2.urlopen', fake_urllib2_urlopen)
             self.patcher.start()
