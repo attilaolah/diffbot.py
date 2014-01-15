@@ -1,4 +1,5 @@
 """Diffbot API tests."""
+import imp
 import json
 import os.path
 import unittest
@@ -215,11 +216,7 @@ class ClientTestUrllib(unittest.TestCase):
                                       fake_urllib2_urlopen)
             self.patcher.start()
         import diffbot
-        try:
-            from imp import reload
-        except ImportError:
-            pass
-        diffbot = reload(diffbot)
+        diffbot = imp.reload(diffbot)
         del diffbot.requests
         self.module = diffbot
         self.client = diffbot.Client(token=TOKEN)
@@ -245,11 +242,7 @@ class CmdLineTest(unittest.TestCase):
         self.patcher = mock.patch('requests.get', fake_requests_get)
         self.patcher.start()
         import diffbot
-        try:
-            from imp import reload
-        except ImportError:
-            pass
-        self.module = reload(diffbot)
+        self.module = imp.reload(diffbot)
         self._sys_argv = sys.argv[:]
         sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
 
