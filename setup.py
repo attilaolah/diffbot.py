@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Python client for the Diffbot API."""
 import sys
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 PY_VERSION = sys.version_info[0], sys.version_info[1]
@@ -34,8 +34,10 @@ setup(
         "Topic :: Software Development :: Libraries",
     ],
     install_requires=requirements,
-    packages=find_packages('.'),
-    package_dir={'': '.'},
+    tests_require=requirements+[
+        "requests",
+        "nose",
+    ],
     include_package_data=False,
     test_suite='nose.collector',
     zip_safe=True,
