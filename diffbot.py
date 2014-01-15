@@ -9,6 +9,8 @@ except ImportError:
     pass
 
 
+ENCODING = 'utf-8'
+
 API_ROOT = 'http://api.diffbot.com'
 API_VERSION = 2
 
@@ -30,7 +32,7 @@ class Client(object):
             return requests.get(url, params=params).json()
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
+            return json.loads(urllib2.urlopen(url).read().decode(ENCODING))
 
     @staticmethod
     def _post(url, data, content_type, params=None):
@@ -41,8 +43,10 @@ class Client(object):
             }).json()
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            response = urllib2.urlopen(url, data=data.encode('utf-8')).read()
-            return json.loads(response.decode('utf-8'))
+            req = urllib2.Request(url, data.encode(ENCODING), {
+                'Content-Type': content_type,
+            })
+            return json.loads(urllib2.urlopen(req).read().decode(ENCODING))
 
     def api(self, name, url, **kwargs):
         """Generic API method."""
@@ -147,7 +151,7 @@ def _main():
         text = sys.stdin.read()
     elif _args.file:
         with open(_args.file, 'rb') as src:
-            text = src.read().decode('utf-8')
+            text = src.read().decode(ENCODING)
     print(json.dumps((api(_args.api, _args.url, _args.token,
                           text=text or None,
                           fields=fields)),
