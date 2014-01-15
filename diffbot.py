@@ -29,8 +29,7 @@ class Client(object):
         try:
             return requests.get(url, params=params).json()
         except NameError:
-            if params is not None:
-                url = '{0}?{1}'.format(url, urllib.urlencode(params))
+            url = '{0}?{1}'.format(url, urllib.urlencode(params))
             return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
 
     @staticmethod
@@ -41,10 +40,9 @@ class Client(object):
                 'Content-Type': content_type,
             }).json()
         except NameError:
-            raise NotImplementedError
-            #if params is not None:
-            #    url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            #return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
+            url = '{0}?{1}'.format(url, urllib.urlencode(params))
+            response = urllib2.urlopen(url, data=data).read()
+            return json.loads(response.decode('utf-8'))
 
     def api(self, name, url, **kwargs):
         """Generic API method."""
