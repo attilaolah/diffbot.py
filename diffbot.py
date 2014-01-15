@@ -41,7 +41,7 @@ class Client(object):
             }).json()
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            response = urllib2.urlopen(url, data=data).read()
+            response = urllib2.urlopen(url, data=data.encode('utf-8')).read()
             return json.loads(response.decode('utf-8'))
 
     def api(self, name, url, **kwargs):
