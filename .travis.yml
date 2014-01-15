@@ -10,7 +10,7 @@ python:
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then 2to3 -w diffbot.py; fi
   - if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then 2to3 -w diffbot.py; fi
-  - pip install requests nose mock coverage .
+  - pip install requests nose mock coverage coveralls .
 script:
   nosetests
 after_success:
