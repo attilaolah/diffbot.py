@@ -64,10 +64,11 @@ $ python diffbot.py article https://github.com TOKEN
 * Google App Engine support
 * [Requests][2] support (but no dependency)
 * Simple & small (<100 LOC)
-* 100% test coverage
+* [CI][3] + [100% test coverage][4]
 * Passes `pyflakes`, `pep8`, `flake8`, `pylint` score 10/10
-* CI-tested
 
 
 [1]: https://www.diffbot.com
 [2]: http://docs.python-requests.org
+[3]: https://travis-ci.org/attilaolah/diffbot.py
+[4]: https://coveralls.io/r/attilaolah/diffbot.py
