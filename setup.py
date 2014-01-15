@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 """Python client for the Diffbot API."""
-
+import sys
 from setuptools import find_packages, setup
+
+
+PY_VERSION = sys.version_info[0], sys.version_info[1]
+
+requirements = []
+
+if PY_VERSION == (2, 6):
+    requirements.append('argparse')
 
 
 setup(
@@ -26,6 +34,7 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries",
     ],
+    install_requires=requirements,
     packages=find_packages('.'),
     package_dir={'': '.'},
     include_package_data=False,
