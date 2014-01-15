@@ -38,6 +38,7 @@ setup(
         "requests",
         "nose",
     ],
+    py_modules=['diffbot'],
     include_package_data=False,
     test_suite='nose.collector',
     zip_safe=True,
