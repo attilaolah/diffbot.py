@@ -33,75 +33,102 @@ class Client(object):
                 url = '{0}?{1}'.format(url, urllib.urlencode(params))
             return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
 
-    def api(self, name, url, fields=None, timeout=None):
+    @staticmethod
+    def _post(url, data, content_type='text/plain', params=None):
+        """HTTP POST request."""
+        try:
+            return requests.post(url, params=params, data=data, headers={
+                'Content-Type': content_type,
+            }).json()
+        except NameError:
+            raise NotImplementedError
+        except ValueError:
+            # XXX DEBUG!
+            resp =  requests.post(url, params=params, data=data, headers={
+                'Content-Type': content_type,
+            })
+            import ipdb; ipdb.set_trace()
+
+            #if params is not None:
+            #    url = '{0}?{1}'.format(url, urllib.urlencode(params))
+            #return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
+
+    def api(self, name, url, **kwargs):
         """Generic API method."""
         if name not in self._apis:
             raise ValueError('API name must be one of {0}, not {1!r}.'.format(
                 tuple(self._apis), name))
+        fields = kwargs.get('fields')
+        timeout = kwargs.get('timeout')
+        content_type = kwargs.get('content_type', 'text/plain')
+        text = kwargs.get('text')
         params = {'url': url, 'token': self._token}
-        if timeout is not None:
+        if timeout:
             params['timeout'] = timeout
-        if fields is not None:
+        if fields:
             if not isinstance(fields, str):
                 fields = ','.join(sorted(fields))
             params['fields'] = fields
         url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
+        if text:
+            return self._post(url, text, content_type, params=params)
         return self._get(url, params=params)
 
-    def article(self, url, fields=None, timeout=None):
+    def article(self, url, **kwargs):
         """Article API."""
-        return self.api('article', url, fields=fields, timeout=timeout)
+        return self.api('article', url, **kwargs)
 
-    def frontpage(self, url, timeout=None):
+    def frontpage(self, url, **kwargs):
         """Frontpage API."""
-        return self.api('frontpage', url, timeout=timeout)
+        return self.api('frontpage', url, **kwargs)
 
-    def product(self, url, fields=None, timeout=None):
+    def product(self, url, **kwargs):
         """Product API."""
-        return self.api('product', url, fields=fields, timeout=timeout)
+        return self.api('product', url, **kwargs)
 
-    def image(self, url, fields=None, timeout=None):
+    def image(self, url, **kwargs):
         """Image API."""
-        return self.api('image', url, fields=fields, timeout=timeout)
+        return self.api('image', url, **kwargs)
 
-    def analyze(self, url, fields=None, timeout=None):
+    def analyze(self, url, **kwargs):
         """Classifier (analyze) API."""
-        return self.api('analyze', url, fields=fields, timeout=timeout)
+        return self.api('analyze', url, **kwargs)
 
 
-def api(name, url, token, fields=None, timeout=None):
+def api(name, url, token, **kwargs):
     """Shortcut for caling methods on `Client(token, version)`."""
-    return Client(token).api(name, url, fields, timeout)
+    return Client(token).api(name, url, **kwargs)
 
 
-def article(url, token, fields=None, timeout=None):
+def article(url, token, **kwargs):
     """Shortcut for `Client(token, version).article(url)`."""
-    return api('article', url, token, fields, timeout)
+    return api('article', url, token, **kwargs)
 
 
-def frontpage(url, token, timeout=None):
+def frontpage(url, token, **kwargs):
     """Shortcut for `Client(token, version).frontpage(url)`."""
-    return api('frontpage', url, token, timeout)
+    return api('frontpage', url, token, **kwargs)
 
 
-def product(url, token, fields=None, timeout=None):
+def product(url, token, **kwargs):
     """Shortcut for `Client(token, version).product(url)`."""
-    return api('product', url, token, fields, timeout)
+    return api('product', url, token, **kwargs)
 
 
-def image(url, token, fields=None, timeout=None):
+def image(url, token, **kwargs):
     """Shortcut for `Client(token, version).image(url)`."""
-    return api('image', url, token, fields, timeout)
+    return api('image', url, token, **kwargs)
 
 
-def analyze(url, token, fields=None, timeout=None):
+def analyze(url, token, **kwargs):
     """Shortcut for `Client(token, version).analyze(url)`."""
-    return api('analyze', url, token, fields, timeout)
+    return api('analyze', url, token, **kwargs)
 
 
 def _main():
     """Command line tool."""
     import argparse
+    import sys
     parser = argparse.ArgumentParser()
     parser.add_argument("api", help="""
         API to call.
@@ -117,11 +144,25 @@ def _main():
     parser.add_argument('-a', '--all', help="""
         Request all fields.
     """, action='store_true')
+    parser.add_argument('-f', '--file', help="""
+        File to read data from.
+        Use '-' to read from STDIN.
+    """)
+    fields = text = content_type = None
     _args = parser.parse_args()
-    fields = None
     if _args.all:
         fields = '*'
+    if _args.file == '-':
+        text = sys.stdin.read()
+    elif _args.file:
+        with open(_args.file, 'rb') as src:
+            text = src.read().decode('utf-8')
+    if text:
+        content_type = (text.lstrip() or ' ')[0] == '<' \
+            and 'text/html' or 'text/plain'
     print(json.dumps((api(_args.api, _args.url, _args.token,
+                          text=text or None,
+                          content_type=content_type,
                           fields=fields)),
                      sort_keys=True,
                      indent=2))
