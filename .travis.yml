@@ -12,6 +12,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then 2to3 -w diffbot.py; fi
   - pip install requests nose mock coverage coveralls .
 script:
-  nosetests
+  - nosetests
 after_success:
-  coveralls
+  - coverage run --source=diffbot.py setup.py -q test
+  - coveralls
