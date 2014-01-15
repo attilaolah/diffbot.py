@@ -1,11 +1,12 @@
 """Diffbot API Wrapper."""
 import json
+import urllib
+import urllib2
 
 try:
     import requests
 except ImportError:
-    import urllib
-    import urllib2
+    pass
 
 
 API_ROOT = 'http://api.diffbot.com/'
