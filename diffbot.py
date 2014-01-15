@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 
-API_ROOT = 'http://api.diffbot.com/'
+API_ROOT = 'http://api.diffbot.com'
 API_VERSION = 2
 
 
