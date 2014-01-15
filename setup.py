@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Python client for the Diffbot API."""
 
 from setuptools import find_packages, setup
@@ -8,7 +9,7 @@ setup(
     version='1.0.0',
     url='http://www.diffbot.com/',
     license='MIT',
-    author='Attila Olah <attilaolah@gmail.com>',
+    author='Attila Oláh <attilaolah@gmail.com>',
     description="Python client for the Diffbot API.",
     packages=find_packages('.'),
     package_dir={'': '.'},
