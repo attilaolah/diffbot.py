@@ -6,7 +6,6 @@ python:
   - "3.2"
   - "3.3"
   - "pypy"
-  - "jython"
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then 2to3 -w diffbot.py; fi
