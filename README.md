@@ -2,8 +2,9 @@
 
 [![Build Status](https://travis-ci.org/attilaolah/diffbot.py.png?branch=master)](https://travis-ci.org/attilaolah/diffbot.py)
 [![Coverage Status](https://coveralls.io/repos/attilaolah/diffbot.py/badge.png)](https://coveralls.io/r/attilaolah/diffbot.py)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-Simple usage:
+How to use it:
 
 ```python
 >>> import diffbot
@@ -70,7 +71,3 @@ $ python diffbot.py article https://github.com TOKEN
 
 [1]: https://www.diffbot.com
 [2]: http://docs.python-requests.org
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
