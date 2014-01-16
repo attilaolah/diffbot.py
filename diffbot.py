@@ -1,5 +1,7 @@
-"""Diffbot API Wrapper."""
+"""Diffbot API wrapper."""
+import argparse
 import json
+import sys
 import urllib
 import urllib2
 
@@ -55,8 +57,10 @@ class Client(object):
                 tuple(self._apis), name))
         fields = kwargs.get('fields')
         timeout = kwargs.get('timeout')
-        content_type = kwargs.get('content_type', 'text/plain')
         text = kwargs.get('text')
+        html = kwargs.get('html')
+        if text and html:
+            raise ValueError(u'Both `text` and `html` arguments provided!')
         params = {'url': url, 'token': self._token}
         if timeout:
             params['timeout'] = timeout
@@ -65,7 +69,8 @@ class Client(object):
                 fields = ','.join(sorted(fields))
             params['fields'] = fields
         url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
-        if text:
+        if text or html:
+            content_type = html and 'text/html' or 'text/plain'
             return self._post(url, text, content_type, params=params)
         return self._get(url, params=params)
 
@@ -120,10 +125,8 @@ def analyze(url, token, **kwargs):
     return api('analyze', url, token, **kwargs)
 
 
-def _main():
+def cli():
     """Command line tool."""
-    import argparse
-    import sys
     parser = argparse.ArgumentParser()
     parser.add_argument("api", help="""
         API to call.
@@ -160,4 +163,4 @@ def _main():
 
 
 if __name__ == '__main__':
-    _main()  # pragma: no cover
+    cli()  # pragma: no cover

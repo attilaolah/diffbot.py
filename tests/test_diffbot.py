@@ -263,6 +263,17 @@ class ClientTestPOST(unittest.TestCase):
         self.assertEqual(result['type'], 'article')
         self.assertEqual(result['title'], 'Build software better, together.')
 
+    def test_article_conflict(self):
+        """Test the Article API."""
+        def raises():
+            self.client.article(GITHUB_COM, text='''
+                Hello, World! This is some example text. It will be ignored.
+            ''', html='''
+                <h1>Hello, World!</h1>
+                <p>This is some example text. It will be ignored.</p>
+            ''')
+        self.assertRaises(ValueError, raises)
+
 
 class ClientTestPOSTUrllib(unittest.TestCase):
     """POST API method tests using `urllib2` and `urllib`.
@@ -302,45 +313,48 @@ class ClientTestPOSTUrllib(unittest.TestCase):
         self.assertEqual(result['title'], 'Build software better, together.')
 
 
-class CmdLineTest(unittest.TestCase):
+class CLITest(unittest.TestCase):
     """Test the command line interface."""
 
     def setUp(self):
         """Set up a mock patcher."""
-        self.patcher = mock.patch('requests.get', fake_requests_get)
-        self.patcher.start()
+        self.patcher_post = mock.patch('requests.post', fake_requests_post)
+        self.patcher_get = mock.patch('requests.get', fake_requests_get)
+        self.patcher_post.start()
+        self.patcher_get.start()
         import diffbot
         self.module = imp.reload(diffbot)
 
     def tearDown(self):
         """Stop the patcher."""
-        self.patcher.stop()
+        self.patcher_post.stop()
+        self.patcher_get.stop()
 
     def test_article(self):
         """Test the Article API."""
-        self._sys_argv = sys.argv[:]
-        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
-        self.module._main()
-        sys.argv[:] = self._sys_argv[:]
+        _sys_argv = sys.argv[:]
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
+        self.module.cli()
+        sys.argv[:] = _sys_argv
 
     def test_article_file(self):
         """Test the Article API."""
-        self._sys_argv = sys.argv[:]
+        _sys_argv = sys.argv[:]
         upload_file = os.path.join('tests', 'resources', 'upload.txt')
-        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret',
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
                        '-f', upload_file, '-a']
-        self.module._main()
-        sys.argv[:] = self._sys_argv[:]
+        self.module.cli()
+        sys.argv[:] = _sys_argv
 
     def test_article_stdin(self):
         """Test the Article API."""
-        self._sys_argv = sys.argv[:]
-        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret',
+        _sys_argv = sys.argv[:]
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
                        '-f', '-', '-a']
-        self._sys_stdin = sys.stdin
+        _sys_stdin = sys.stdin
         upload_file = os.path.join('tests', 'resources', 'upload.txt')
         with open(upload_file, 'rb') as stdin:
             sys.stdin = stdin
-            self.module._main()
-        sys.argv[:] = self._sys_argv[:]
-        sys.stdin = self._sys_stdin
+            self.module.cli()
+        sys.argv[:] = _sys_argv
+        sys.stdin = _sys_stdin
