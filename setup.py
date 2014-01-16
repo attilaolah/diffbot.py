@@ -40,6 +40,11 @@ setup(
     ],
     py_modules=['diffbot'],
     include_package_data=False,
+    entry_points={
+        'console_scripts': [
+            'diffbot = diffbot:cli',
+        ],
+    },
     test_suite='nose.collector',
     zip_safe=True,
     use_2to3=True,
