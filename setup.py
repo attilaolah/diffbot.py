@@ -14,7 +14,7 @@ if PY_VERSION == (2, 6):
 
 setup(
     name='diffbot',
-    version='1.0.0',
+    version='1.1.0',
     url='https://github.com/attilaolah/diffbot.py',
     license='MIT',
     author='Attila Oláh',
