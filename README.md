@@ -28,22 +28,37 @@ The above calls are shortcuts for using the `diffbot.api()` function and the
 >>> json_result = client.api('article', 'https://github.com')
 ```
 
-You can test the module easily from the command line:
+To `POST` data (text or HTML) to the API, use the `text` or `html` arguments:
+
+```python
+>>> import diffbot
+>>> client = diffbot.Client(token='…')
+>>> json_result = client.api('article', 'https://github.com', html='''
+... <h1>Introducing GitHub Traffic Analytics</h1>
+... <p>We want to kick off 2014 with a bang, so today we're happy to launch
+... traffic analytics!</p>
+... ''')
+```
+
+## Command line interface:
 
 ```sh
 $ python diffbot.py -h
-usage: diffbot.py [-h] [-a] api url token
+usage: diffbot.py [-h] [-a] [-f FILE] api url token
 
 positional arguments:
-  api         API to call. One one of 'article', 'frontpage', 'product',
-              'image' or 'classifier'.
-  url         URL to pass as the 'url' parameter.
-  token       API key (token). Get one at https://www.diffbot.com/.
+  api                   API to call. One one of 'article', 'frontpage',
+                        'product', 'image' or 'analyze'.
+  url                   URL to pass as the 'url' parameter.
+  token                 API key (token). Get one at https://www.diffbot.com/.
 
 optional arguments:
-  -h, --help  show this help message and exit
-  -a, --all   Request all fields.
+  -h, --help            show this help message and exit
+  -a, --all             Request all fields.
+  -f FILE, --file FILE  File to read data from. Use '-' to read from STDIN.
+```
 
+```bash
 $ python diffbot.py article https://github.com TOKEN
 ```
 

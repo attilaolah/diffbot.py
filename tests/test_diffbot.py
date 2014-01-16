@@ -28,8 +28,15 @@ def fake_requests_get(url, params=None):
         return FakeResponse(json.loads(src.read().decode('utf-8')))
 
 
-def fake_urllib2_urlopen(url):
+def fake_requests_post(url, params=None, data=None, headers=None):
+    """A stub `requests.post()` implementation."""
+    return fake_requests_get(url, params=params)
+
+
+def fake_urllib2_urlopen(url, data=None):
     """A stub `urllib2.urlopen()` implementation."""
+    if not isinstance(url, str):
+        url = url.get_full_url()
     api = urlparse.urlparse(url)
     url = urlparse.urlparse(urlparse.parse_qs(api.query)['url'][0])
     resource = os.path.join('tests', 'resources', url.netloc,
@@ -217,8 +224,6 @@ class ClientTestUrllib(unittest.TestCase):
             self.patcher.start()
         import diffbot
         diffbot = imp.reload(diffbot)
-        del diffbot.requests
-        self.module = diffbot
         self.client = diffbot.Client(token=TOKEN)
 
     def tearDown(self):
@@ -228,30 +233,137 @@ class ClientTestUrllib(unittest.TestCase):
 
     def test_article_client(self):
         """Test the Article API."""
-        result = self.module.Client(TOKEN).article(GITHUB_COM)
+        result = self.client.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['title'], 'Build software better, together.')
 
 
-class CmdLineTest(unittest.TestCase):
+class ClientTestPOST(unittest.TestCase):
+    """POST API method tests."""
+
+    def setUp(self):
+        """Set up a mock patcher."""
+        self.patcher = mock.patch('requests.post', fake_requests_post)
+        self.patcher.start()
+        import diffbot
+        self.client = diffbot.Client(token=TOKEN)
+        self.client_v1 = diffbot.Client(token=TOKEN, version=1)
+        self.client_v2 = diffbot.Client(token=TOKEN, version=2)
+
+    def tearDown(self):
+        """Stop the patcher."""
+        self.patcher.stop()
+
+    def test_article(self):
+        """Test the Article API."""
+        result = self.client.article(GITHUB_COM, text='''
+            Hello, World! This is some example text. It will be ignored.
+        ''')
+        self.assertEqual(result['url'], GITHUB_COM)
+        self.assertEqual(result['type'], 'article')
+        self.assertEqual(result['title'], 'Build software better, together.')
+
+    def test_article_conflict(self):
+        """Test the Article API."""
+        def raises():
+            self.client.article(GITHUB_COM, text='''
+                Hello, World! This is some example text. It will be ignored.
+            ''', html='''
+                <h1>Hello, World!</h1>
+                <p>This is some example text. It will be ignored.</p>
+            ''')
+        self.assertRaises(ValueError, raises)
+
+
+class ClientTestPOSTUrllib(unittest.TestCase):
+    """POST API method tests using `urllib2` and `urllib`.
+
+    This tests the scenario when the `requests` library is not installed."""
+
+    def setUp(self):
+        """Set up a mock patcher.
+
+        This will make the `requests` library unavailable in `diffbot`.
+        """
+        self.import_hook = ImportHook('requests')
+        sys.meta_path.insert(0, self.import_hook)
+        try:
+            self.patcher = mock.patch('urllib2.urlopen', fake_urllib2_urlopen)
+            self.patcher.start()
+        except ImportError:
+            self.patcher = mock.patch('urllib.request.urlopen',
+                                      fake_urllib2_urlopen)
+            self.patcher.start()
+        import diffbot
+        diffbot = imp.reload(diffbot)
+        del diffbot.requests
+        self.client = diffbot.Client(token=TOKEN)
+
+    def tearDown(self):
+        """Stop the patcher."""
+        self.patcher.stop()
+        sys.meta_path.remove(self.import_hook)
+
+    def test_article_client(self):
+        """Test the Article API."""
+        result = self.client.article(GITHUB_COM, text='''
+            Hello, World! This is some example text. It will be ignored.
+        ''')
+        self.assertEqual(result['url'], GITHUB_COM)
+        self.assertEqual(result['title'], 'Build software better, together.')
+
+
+class CLITest(unittest.TestCase):
     """Test the command line interface."""
 
     def setUp(self):
         """Set up a mock patcher."""
-        import sys
-        self.patcher = mock.patch('requests.get', fake_requests_get)
-        self.patcher.start()
+        self.patcher_post = mock.patch('requests.post', fake_requests_post)
+        self.patcher_get = mock.patch('requests.get', fake_requests_get)
+        self.patcher_post.start()
+        self.patcher_get.start()
         import diffbot
         self.module = imp.reload(diffbot)
-        self._sys_argv = sys.argv[:]
-        sys.argv[:] = [self._sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
 
     def tearDown(self):
         """Stop the patcher."""
-        import sys
-        self.patcher.stop()
-        sys.argv[:] = self._sys_argv[:]
+        self.patcher_post.stop()
+        self.patcher_get.stop()
 
     def test_article(self):
         """Test the Article API."""
-        self.module._main()
+        _sys_argv = sys.argv[:]
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret', '-a']
+        self.module.cli()
+        sys.argv[:] = _sys_argv
+
+    def test_article_file(self):
+        """Test the Article API."""
+        _sys_argv = sys.argv[:]
+        upload_file = os.path.join('tests', 'resources', 'upload.txt')
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
+                       '-f', upload_file, '-a']
+        self.module.cli()
+        sys.argv[:] = _sys_argv
+
+    def test_article_file_html(self):
+        """Test the Article API."""
+        _sys_argv = sys.argv[:]
+        upload_file = os.path.join('tests', 'resources', 'upload.html')
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
+                       '-f', upload_file, '-a']
+        self.module.cli()
+        sys.argv[:] = _sys_argv
+
+    def test_article_stdin(self):
+        """Test the Article API."""
+        _sys_argv = sys.argv[:]
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
+                       '-f', '-', '-a']
+        _sys_stdin = sys.stdin
+        upload_file = os.path.join('tests', 'resources', 'upload.txt')
+        with open(upload_file, 'rb') as stdin:
+            sys.stdin = stdin
+            self.module.cli()
+        sys.argv[:] = _sys_argv
+        sys.stdin = _sys_stdin

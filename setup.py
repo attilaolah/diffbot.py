@@ -6,10 +6,10 @@ from setuptools import setup
 
 PY_VERSION = sys.version_info[0], sys.version_info[1]
 
-requirements = []
+REQUIREMENTS = []
 
 if PY_VERSION == (2, 6):
-    requirements.append('argparse')
+    REQUIREMENTS.append('argparse')
 
 
 setup(
@@ -33,13 +33,18 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries",
     ],
-    install_requires=requirements,
-    tests_require=requirements+[
+    install_requires=REQUIREMENTS,
+    tests_require=REQUIREMENTS+[
         "requests",
         "nose",
     ],
     py_modules=['diffbot'],
     include_package_data=False,
+    entry_points={
+        'console_scripts': [
+            'diffbot = diffbot:cli',
+        ],
+    },
     test_suite='nose.collector',
     zip_safe=True,
     use_2to3=True,

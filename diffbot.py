@@ -1,5 +1,8 @@
-"""Diffbot API Wrapper."""
+"""Diffbot API wrapper."""
+import argparse
 import json
+import os
+import sys
 import urllib
 import urllib2
 
@@ -9,7 +12,9 @@ except ImportError:
     pass
 
 
-API_ROOT = 'http://api.diffbot.com/'
+ENCODING = 'utf-8'
+
+API_ROOT = 'http://api.diffbot.com'
 API_VERSION = 2
 
 
@@ -29,79 +34,100 @@ class Client(object):
         try:
             return requests.get(url, params=params).json()
         except NameError:
-            if params is not None:
-                url = '{0}?{1}'.format(url, urllib.urlencode(params))
-            return json.loads(urllib2.urlopen(url).read().decode('utf-8'))
+            url = '{0}?{1}'.format(url, urllib.urlencode(params))
+            return json.loads(urllib2.urlopen(url).read().decode(ENCODING))
 
-    def api(self, name, url, fields=None, timeout=None):
+    @staticmethod
+    def _post(url, data, content_type, params=None):
+        """HTTP POST request."""
+        try:
+            return requests.post(url, params=params, data=data, headers={
+                'Content-Type': content_type,
+            }).json()
+        except NameError:
+            url = '{0}?{1}'.format(url, urllib.urlencode(params))
+            req = urllib2.Request(url, data.encode(ENCODING), {
+                'Content-Type': content_type,
+            })
+            return json.loads(urllib2.urlopen(req).read().decode(ENCODING))
+
+    def api(self, name, url, **kwargs):
         """Generic API method."""
         if name not in self._apis:
             raise ValueError('API name must be one of {0}, not {1!r}.'.format(
                 tuple(self._apis), name))
+        fields = kwargs.get('fields')
+        timeout = kwargs.get('timeout')
+        text = kwargs.get('text')
+        html = kwargs.get('html')
+        if text and html:
+            raise ValueError(u'Both `text` and `html` arguments provided!')
         params = {'url': url, 'token': self._token}
-        if timeout is not None:
+        if timeout:
             params['timeout'] = timeout
-        if fields is not None:
+        if fields:
             if not isinstance(fields, str):
                 fields = ','.join(sorted(fields))
             params['fields'] = fields
         url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
+        if text or html:
+            content_type = html and 'text/html' or 'text/plain'
+            return self._post(url, text, content_type, params=params)
         return self._get(url, params=params)
 
-    def article(self, url, fields=None, timeout=None):
+    def article(self, url, **kwargs):
         """Article API."""
-        return self.api('article', url, fields=fields, timeout=timeout)
+        return self.api('article', url, **kwargs)
 
-    def frontpage(self, url, timeout=None):
+    def frontpage(self, url, **kwargs):
         """Frontpage API."""
-        return self.api('frontpage', url, timeout=timeout)
+        return self.api('frontpage', url, **kwargs)
 
-    def product(self, url, fields=None, timeout=None):
+    def product(self, url, **kwargs):
         """Product API."""
-        return self.api('product', url, fields=fields, timeout=timeout)
+        return self.api('product', url, **kwargs)
 
-    def image(self, url, fields=None, timeout=None):
+    def image(self, url, **kwargs):
         """Image API."""
-        return self.api('image', url, fields=fields, timeout=timeout)
+        return self.api('image', url, **kwargs)
 
-    def analyze(self, url, fields=None, timeout=None):
+    def analyze(self, url, **kwargs):
         """Classifier (analyze) API."""
-        return self.api('analyze', url, fields=fields, timeout=timeout)
+        return self.api('analyze', url, **kwargs)
 
 
-def api(name, url, token, fields=None, timeout=None):
+def api(name, url, token, **kwargs):
     """Shortcut for caling methods on `Client(token, version)`."""
-    return Client(token).api(name, url, fields, timeout)
+    return Client(token).api(name, url, **kwargs)
 
 
-def article(url, token, fields=None, timeout=None):
+def article(url, token, **kwargs):
     """Shortcut for `Client(token, version).article(url)`."""
-    return api('article', url, token, fields, timeout)
+    return api('article', url, token, **kwargs)
 
 
-def frontpage(url, token, timeout=None):
+def frontpage(url, token, **kwargs):
     """Shortcut for `Client(token, version).frontpage(url)`."""
-    return api('frontpage', url, token, timeout)
+    return api('frontpage', url, token, **kwargs)
 
 
-def product(url, token, fields=None, timeout=None):
+def product(url, token, **kwargs):
     """Shortcut for `Client(token, version).product(url)`."""
-    return api('product', url, token, fields, timeout)
+    return api('product', url, token, **kwargs)
 
 
-def image(url, token, fields=None, timeout=None):
+def image(url, token, **kwargs):
     """Shortcut for `Client(token, version).image(url)`."""
-    return api('image', url, token, fields, timeout)
+    return api('image', url, token, **kwargs)
 
 
-def analyze(url, token, fields=None, timeout=None):
+def analyze(url, token, **kwargs):
     """Shortcut for `Client(token, version).analyze(url)`."""
-    return api('analyze', url, token, fields, timeout)
+    return api('analyze', url, token, **kwargs)
 
 
-def _main():
+def cli():
     """Command line tool."""
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("api", help="""
         API to call.
@@ -117,15 +143,29 @@ def _main():
     parser.add_argument('-a', '--all', help="""
         Request all fields.
     """, action='store_true')
+    parser.add_argument('-f', '--file', help="""
+        File to read data from.
+        Use '-' to read from STDIN.
+    """)
+    fields = text = html = None
     _args = parser.parse_args()
-    fields = None
     if _args.all:
         fields = '*'
+    if _args.file == '-':
+        text = sys.stdin.read()
+    elif _args.file:
+        with open(_args.file, 'rb') as src:
+            if os.path.splitext(_args.file)[1] in ('.html', '.htm'):
+                html = src.read().decode(ENCODING)
+            else:
+                text = src.read().decode(ENCODING)
     print(json.dumps((api(_args.api, _args.url, _args.token,
+                          html=html or None,
+                          text=text or None,
                           fields=fields)),
                      sort_keys=True,
                      indent=2))
 
 
 if __name__ == '__main__':
-    _main()  # pragma: no cover
+    cli()  # pragma: no cover
