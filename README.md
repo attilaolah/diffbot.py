@@ -75,15 +75,17 @@ $ python diffbot.py article https://github.com TOKEN
 
 ## Features:
 
-* Python 3 support
+* Python 2+3 support
 * Google App Engine support
 * [Requests][2] support (but no dependency)
-* Simple & small (<100 LOC)
 * [CI][3] + [100% test coverage][4]
 * Passes `pyflakes`, `pep8`, `flake8`, `pylint` score 10/10
+* Simple & small (1 file, ~100 LOC)
+* [Command line interface][5]
 
 
 [1]: https://www.diffbot.com
 [2]: http://docs.python-requests.org
 [3]: https://travis-ci.org/attilaolah/diffbot.py
 [4]: https://coveralls.io/r/attilaolah/diffbot.py
+[5]: #command-line-interface
