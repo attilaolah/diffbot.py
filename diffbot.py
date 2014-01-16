@@ -1,6 +1,7 @@
 """Diffbot API wrapper."""
 import argparse
 import json
+import os
 import sys
 import urllib
 import urllib2
@@ -146,7 +147,7 @@ def cli():
         File to read data from.
         Use '-' to read from STDIN.
     """)
-    fields = text = None
+    fields = text = html = None
     _args = parser.parse_args()
     if _args.all:
         fields = '*'
@@ -154,8 +155,12 @@ def cli():
         text = sys.stdin.read()
     elif _args.file:
         with open(_args.file, 'rb') as src:
-            text = src.read().decode(ENCODING)
+            if os.path.splitext(_args.file)[1] in ('.html', '.htm'):
+                html = src.read().decode(ENCODING)
+            else:
+                text = src.read().decode(ENCODING)
     print(json.dumps((api(_args.api, _args.url, _args.token,
+                          html=html or None,
                           text=text or None,
                           fields=fields)),
                      sort_keys=True,

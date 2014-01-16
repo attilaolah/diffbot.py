@@ -346,6 +346,15 @@ class CLITest(unittest.TestCase):
         self.module.cli()
         sys.argv[:] = _sys_argv
 
+    def test_article_file_html(self):
+        """Test the Article API."""
+        _sys_argv = sys.argv[:]
+        upload_file = os.path.join('tests', 'resources', 'upload.html')
+        sys.argv[:] = [_sys_argv[0], 'image', GITHUB_COM, 'secret',
+                       '-f', upload_file, '-a']
+        self.module.cli()
+        sys.argv[:] = _sys_argv
+
     def test_article_stdin(self):
         """Test the Article API."""
         _sys_argv = sys.argv[:]
