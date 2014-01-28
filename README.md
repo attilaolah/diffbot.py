@@ -3,6 +3,7 @@
 [![Bitdeli](https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Build Status](https://travis-ci.org/attilaolah/diffbot.py.png?branch=master)](https://travis-ci.org/attilaolah/diffbot.py)
 [![Coverage Status](https://coveralls.io/repos/attilaolah/diffbot.py/badge.png)](https://coveralls.io/r/attilaolah/diffbot.py)
+[![Dependency Status](https://gemnasium.com/attilaolah/diffbot.py.png)](https://gemnasium.com/attilaolah/diffbot.py)
 
 How to use it:
 
