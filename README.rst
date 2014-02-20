@@ -82,7 +82,7 @@ Output of the above example:
 
     {
       "icon": "https://github.com:443/apple-touch-icon-144.png",
-        "sections": [
+      "sections": [
           …
       ],
       "title": "Build software better, together.",
