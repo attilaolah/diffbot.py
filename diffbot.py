@@ -43,9 +43,11 @@ class Client(object):
     def _post(url, data, content_type, params=None):
         """HTTP POST request."""
         try:
-            return requests.post(url, params=params, data=data, headers={
+            response = requests.post(url, params=params, data=data, headers={
                 'Content-Type': content_type,
-            }).json()
+            })
+            response.raise_for_status()
+            return response.json()
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
             req = urllib2.Request(url, data.encode(ENCODING), {
