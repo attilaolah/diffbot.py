@@ -18,6 +18,7 @@ Python Diffbot_ API |License|
    :alt: Downloads
 
 How to use it:
+--------------
 
 .. code:: python
 
