@@ -1,5 +1,5 @@
-Python Diffbot_ API
-===================
+Python Diffbot_ API |License|
+=============================
 
 .. image:: https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png
    :target: https://bitdeli.com/free
@@ -104,3 +104,5 @@ Features:
 .. _Requests: http://docs.python-requests.org
 .. _CI: https://travis-ci.org/attilaolah/diffbot.py
 .. _`100% test coverage`: https://coveralls.io/r/attilaolah/diffbot.py
+
+.. |License| image:: https://pypip.in/license/diffbot/badge.png
