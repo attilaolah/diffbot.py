@@ -11,6 +11,8 @@ REQUIREMENTS = []
 if PY_VERSION == (2, 6):
     REQUIREMENTS.append('argparse')
 
+with open('README.rst') as README:
+    LONG_DESCRIPTION = README.read()
 
 setup(
     name='diffbot',
@@ -20,6 +22,7 @@ setup(
     author='Attila Oláh',
     author_email='attilaolah@gmail.com',
     description="Python client for the Diffbot API.",
+    long_description=LONG_DESCRIPTION,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
