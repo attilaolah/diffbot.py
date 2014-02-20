@@ -32,7 +32,9 @@ class Client(object):
     def _get(url, params=None):
         """HTTP GET request."""
         try:
-            return requests.get(url, params=params).json()
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            return response.json()
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
             return json.loads(urllib2.urlopen(url).read().decode(ENCODING))
