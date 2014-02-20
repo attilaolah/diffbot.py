@@ -55,6 +55,9 @@ class FakeResponse(object):
         """Return the JSON data."""
         return self._json
 
+    def raise_for_status():
+        """This would raise an exception if the status code >= 400."""
+
 
 class ImportHook(object):
     """PEP-302-style import hook."""
