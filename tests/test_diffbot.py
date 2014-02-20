@@ -55,7 +55,7 @@ class FakeResponse(object):
         """Return the JSON data."""
         return self._json
 
-    def raise_for_status():
+    def raise_for_status(self):
         """This would raise an exception if the status code >= 400."""
 
 
