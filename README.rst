@@ -1,5 +1,5 @@
-Python Diffbot_ API |License|
-=============================
+Python Diffbot_ API
+===================
 
 .. image:: https://d2weczhvl823v0.cloudfront.net/attilaolah/diffbot.py/trend.png
    :target: https://bitdeli.com/free
@@ -10,12 +10,6 @@ Python Diffbot_ API |License|
 .. image:: https://coveralls.io/repos/attilaolah/diffbot.py/badge.png?branch=master
    :target: https://coveralls.io/r/attilaolah/diffbot.py
    :alt: Coverage Status
-.. image:: https://pypip.in/v/diffbot/badge.png
-   :target: https://pypi.python.org/pypi/diffbot/
-   :alt: Version
-.. image:: https://pypip.in/d/diffbot/badge.png?period=month
-   :target: https://pypi.python.org/pypi/diffbot/
-   :alt: Downloads
 
 How to use it:
 --------------
@@ -105,5 +99,3 @@ Features:
 .. _Requests: http://docs.python-requests.org
 .. _CI: https://travis-ci.org/attilaolah/diffbot.py
 .. _`100% test coverage`: https://coveralls.io/r/attilaolah/diffbot.py
-
-.. |License| image:: https://pypip.in/license/diffbot/badge.png
