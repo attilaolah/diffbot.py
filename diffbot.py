@@ -76,7 +76,7 @@ class Client(object):
         url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
         if text or html:
             content_type = html and 'text/html' or 'text/plain'
-            return self._post(url, text, content_type, params=params)
+            return self._post(url, text or html, content_type, params=params)
         return self._get(url, params=params)
 
     def article(self, url, **kwargs):
