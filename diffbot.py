@@ -39,7 +39,7 @@ class Client(object):
             # (e.g. when downloading CSV job logs).
             try:
                 return response.json()
-            except:
+            except ValueError:
                 return response.text
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
