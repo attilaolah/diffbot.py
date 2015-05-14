@@ -62,6 +62,7 @@ class Client(object):
             return json.loads(urllib2.urlopen(req).read().decode(ENCODING))
 
     def endpoint(self, name):
+        """Generate the URL endpoint for the given API."""
         return '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
 
     def api(self, name, url, **kwargs):
@@ -133,12 +134,12 @@ class Client(object):
         params['maxToCrawl'] = 10
         params.update(kwargs)
 
-        rv = self._get(url, params=params)
-        job = next(j for j in rv['jobs'] if j['name'] == name)
+        self._get(url, params=params)
+
         return Job(self._token, name, self._version)
 
 
-class Job (Client):
+class Job(Client):
     """An asynchronous job.
 
     This is used to check crawl status once a crawl job was started.
@@ -152,8 +153,8 @@ class Job (Client):
     def control(self, **kwargs):
         params = {'token': self._token, 'name': self._name}
         params.update(kwargs)
-        rv = self._get(self._url, params)
-        job = next(j for j in rv['jobs'] if j['name'] == self._name)
+        res = self._get(self._url, params)
+        job = next(j for j in res['jobs'] if j['name'] == self._name)
         return job
 
     def pause(self):
