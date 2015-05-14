@@ -88,6 +88,7 @@ class ClientTest(unittest.TestCase):
         self.client = diffbot.Client(token=TOKEN)
         self.client_v1 = diffbot.Client(token=TOKEN, version=1)
         self.client_v2 = diffbot.Client(token=TOKEN, version=2)
+        self.client_v3 = diffbot.Client(token=TOKEN, version=3)
 
     def tearDown(self):
         """Stop the patcher."""
@@ -115,6 +116,12 @@ class ClientTest(unittest.TestCase):
     def test_client_article_v2(self):
         """Test the Article API version 2."""
         result = self.client_v2.article(GITHUB_COM)
+        self.assertEqual(result['url'], GITHUB_COM)
+        self.assertEqual(result['type'], 'article')
+
+    def test_client_article_v3(self):
+        """Test the Article API version 3."""
+        result = self.client_v3.article(GITHUB_COM)
         self.assertEqual(result['url'], GITHUB_COM)
         self.assertEqual(result['type'], 'article')
 
