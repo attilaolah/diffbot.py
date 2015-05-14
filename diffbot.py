@@ -119,7 +119,7 @@ class Client(object):
         Returns a diffbot.Job object to check and retrieve crawl status.
         """
         # If multiple seed URLs are specified, join with whitespace.
-        if isinstance(urls == list):
+        if isinstance(urls, list):
             urls = ' '.join(urls)
         url = self.endpoint('crawl')
         process_url = self.endpoint(api)
