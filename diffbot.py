@@ -186,8 +186,10 @@ class Job (Client):
         return status_code in running_codes
 
     def download(self, format='json'):
-        download_url = '{0}/download/{1}-{2}_data.{3}'.format(self._url, self._token, self._name, format)
+        download_url = '{0}/download/{1}-{2}_data.{3}'\
+            .format(self._url, self._token, self._name, format)
         return self._get(download_url)
+
 
 def api(name, url, token, **kwargs):
     """Shortcut for caling methods on `Client(token, version)`."""
