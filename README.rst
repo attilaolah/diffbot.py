@@ -90,12 +90,10 @@ Features:
 -  Python 2+3 support
 -  Google App Engine support
 -  Requests_ support (but no dependency)
--  CI_ + `100% test coverage`_
 -  Passes ``pyflakes``, ``pep8``, ``flake8``, ``pylint`` score 10/10
 -  Simple & small (1 file, ~100 LOC)
 -  Command line interface
 
 .. _Diffbot: https://www.diffbot.com
 .. _Requests: http://docs.python-requests.org
-.. _CI: https://travis-ci.org/attilaolah/diffbot.py
 .. _`100% test coverage`: https://coveralls.io/r/attilaolah/diffbot.py
