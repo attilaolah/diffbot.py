@@ -15,13 +15,13 @@ except ImportError:
 ENCODING = 'utf-8'
 
 API_ROOT = 'http://api.diffbot.com'
-API_VERSION = 2
+API_VERSION = 3
 
 
 class Client(object):
     """Diffbot client."""
 
-    _apis = frozenset(('article', 'frontpage', 'product', 'image', 'analyze'))
+    _apis = frozenset(('article', 'frontpage', 'product', 'image', 'analyze', 'discussion'))
 
     def __init__(self, token, version=API_VERSION):
         """Initialise the client."""
@@ -34,7 +34,11 @@ class Client(object):
         try:
             response = requests.get(url, params=params)
             response.raise_for_status()
-            return response.json()
+            # If JSON fails, return raw data (used when downloading CSV job logs)
+            try:
+                return response.json()
+            except:
+                return response.text
         except NameError:
             url = '{0}?{1}'.format(url, urllib.urlencode(params))
             return json.loads(urllib2.urlopen(url).read().decode(ENCODING))
@@ -55,6 +59,9 @@ class Client(object):
             })
             return json.loads(urllib2.urlopen(req).read().decode(ENCODING))
 
+    def endpoint(self, name):
+        return '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
+
     def api(self, name, url, **kwargs):
         """Generic API method."""
         if name not in self._apis:
@@ -73,7 +80,7 @@ class Client(object):
             if not isinstance(fields, str):
                 fields = ','.join(sorted(fields))
             params['fields'] = fields
-        url = '{0}/v{1}/{2}'.format(API_ROOT, self._version, name)
+        url = self.endpoint(name)
         if text or html:
             content_type = html and 'text/html' or 'text/plain'
             return self._post(url, text or html, content_type, params=params)
@@ -99,6 +106,78 @@ class Client(object):
         """Classifier (analyze) API."""
         return self.api('analyze', url, **kwargs)
 
+    def discussion(self, url, **kwargs):
+        """Discussion API."""
+        return self.api('discussion', url, **kwargs)
+
+    def crawl(self, urls, name = "crawl", api = "analyze", **kwargs):
+        """Crawlbot API.
+        Returns a diffbot.Job object to check and retrieve crawl status."""
+        # If multiple seed URLs are specified, join with whitespace.
+        if type(urls) == list:
+            urls = " ".join(urls)
+        url = self.endpoint("crawl")
+        process_url = self.endpoint(api)
+        params = {
+            'token' : self._token,
+            'seeds' : urls,
+            'name' : name,
+            'apiUrl' : process_url
+        }
+
+        # Add any additional named parameters as accepted by Crawlbot
+        params["maxToCrawl"] = 10
+        params.update(kwargs)
+
+        rv = self._get(url, params = params)
+        job = next(j for j in rv["jobs"] if j["name"] == name)
+        return Job(self._token, name, self._version)
+
+class Job (Client):
+    def __init__(self, token, name, version = None):
+        Client.__init__(self, token, version)
+        self._name = name
+        self._url = self.endpoint("crawl")
+
+    def control(self, **kwargs):
+        params = { 'token' : self._token, 'name' : self._name }
+        params.update(kwargs)
+        rv = self._get(self._url, params)
+        job = next(j for j in rv["jobs"] if j["name"] == self._name)
+        return job
+    
+    def pause(self):
+        return self.control(pause = 1)
+
+    def unpause(self):
+        return self.control(pause = 0)
+
+    def restart(self):
+        return self.control(restart = 1)
+
+    def delete(self):
+        return self.control(delete = 1)
+
+    def status(self):
+        return self.control()
+
+    def status_code(self):
+        response = self.status()
+        return response["jobStatus"]["status"]
+
+    def is_finished(self):
+        status_code = self.status_code()
+        finished_codes = [ 1, 2, 3, 4, 5, 9 ]
+        return status_code in finished_codes
+
+    def is_running(self):
+        status_code = self.status_code()
+        running_codes = [ 0, 6, 7, 8 ]
+        return status_code in running_codes
+
+    def download(self, format = "json"):
+        download_url = "{0}/download/{1}-{2}_data.{3}".format(self._url, self._token, self._name, format)
+        return self._get(download_url)
 
 def api(name, url, token, **kwargs):
     """Shortcut for caling methods on `Client(token, version)`."""
@@ -129,13 +208,17 @@ def analyze(url, token, **kwargs):
     """Shortcut for `Client(token, version).analyze(url)`."""
     return api('analyze', url, token, **kwargs)
 
+def discussion(url, token, **kwargs):
+    """Shortcut for `Client(token, version).discussion(url)`."""
+    return api('discussion', url, token, **kwargs)
+
 
 def cli():
     """Command line tool."""
     parser = argparse.ArgumentParser()
     parser.add_argument("api", help="""
         API to call.
-        One one of 'article', 'frontpage', 'product', 'image' or 'analyze'.
+        One one of 'article', 'frontpage', 'product', 'image', 'analyze', or 'discussion'.
     """)
     parser.add_argument("url", help="""
         URL to pass as the 'url' parameter.
