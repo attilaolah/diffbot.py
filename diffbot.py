@@ -144,7 +144,7 @@ class Job (Client):
     This is used to check crawl status once a crawl job was started.
     """
 
-    def __init__(self, token, name, version=None):
+    def __init__(self, token, name, version=API_VERSION):
         Client.__init__(self, token, version)
         self._name = name
         self._url = self.endpoint('crawl')
