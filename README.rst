@@ -60,7 +60,7 @@ Command line interface:
 
     positional arguments:
       api                   API to call. One one of 'article', 'frontpage',
-                            'product', 'image' or 'analyze'.
+                            'product', 'image', 'analyze' or 'discussion'.
       url                   URL to pass as the 'url' parameter.
       token                 API key (token). Get one at https://www.diffbot.com/.
 
