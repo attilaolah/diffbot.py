@@ -155,7 +155,7 @@ class Job (Client):
         rv = self._get(self._url, params)
         job = next(j for j in rv['jobs'] if j['name'] == self._name)
         return job
-    
+
     def pause(self):
         return self.control(pause=1)
 
