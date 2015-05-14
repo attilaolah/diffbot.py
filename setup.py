@@ -16,7 +16,7 @@ with open('README.rst') as README:
 
 setup(
     name='diffbot',
-    version='1.1.2',
+    version='2.0.0',
     url='https://github.com/attilaolah/diffbot.py',
     license='MIT',
     author='Attila Oláh',
