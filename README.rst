@@ -91,7 +91,7 @@ Features:
 -  Google App Engine support
 -  Requests_ support (but no dependency)
 -  Passes ``pyflakes``, ``pep8``, ``flake8``, ``pylint`` score 10/10
--  Simple & small (1 file, ~100 LOC)
+-  Simple & small (1 file, <200 LOC)
 -  Command line interface
 
 .. _Diffbot: https://www.diffbot.com
